@@ -1,0 +1,13 @@
+{
+    "path": {
+        "server": "localServer",
+        "root" : "www.oattravel.com",
+        "result": "cleanedCSS"
+    },
+    "targets":[
+        {
+            "url": "https://www.oattravel.com", 
+            "filename": "index.html"
+        }
+    ]
+}

@@ -2,19 +2,20 @@ const scrape = require('website-scraper'),
       PuppeteerPlugin = require('website-scraper-puppeteer'),
       fs = require('fs'),
       path = require('path'),
-      url = "www.oattravel.com",
-      rootFolder = `localServer/${url}`,
-      resultFolder = `${rootFolder}/cleanedCSS`,
+      config = require('./config');
+      rootFolder = `${config.path.server}/${config.path.root}`,
+      resultFolder = `${rootFolder}/${config.path.result}`,
+      fullPath = path.resolve(__dirname, rootFolder),
       configureTasks = require('./gulp/configure-tasks'),
       gulp = require('gulp');
 
 console.log(`Cleaning folder ${rootFolder}`);
 fs.rmdirSync(rootFolder, { recursive: true });
-console.log(`Start scraping ${url}`);
+console.log(`Start scraping`);
 
 scrape({
-    urls: [{url: `https://${url}/`, filename: 'index.html'}],
-    directory: path.resolve(__dirname, rootFolder),
+    urls: config.targets,
+    directory: fullPath,
     plugins: [ 
         new PuppeteerPlugin({
             launchOptions: { 
@@ -34,7 +35,10 @@ scrape({
     gulpTasks.forEach(taskName => {
         console.log(`Running gulp task ${taskName}`);
         gulp.task(taskName)();
-    });   
+    });
+
+    console.log(`Finished!`);
+    console.log(`Result files: ${fullPath}`);
 }).catch((error) => {
     console.log(error);
 });
