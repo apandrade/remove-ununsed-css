@@ -1,18 +1,20 @@
-const scrape = require('website-scraper');
-const PuppeteerPlugin = require('website-scraper-puppeteer');
-const { PurgeCSS } = require('purgecss');
-var fs = require('fs');
+const scrape = require('website-scraper'),
+      PuppeteerPlugin = require('website-scraper-puppeteer'),
+      fs = require('fs'),
+      path = require('path'),
+      url = "www.oattravel.com",
+      rootFolder = `localServer/${url}`,
+      resultFolder = `${rootFolder}/cleanedCSS`,
+      configureTasks = require('./gulp/configure-tasks'),
+      gulp = require('gulp');
 
-const path = require('path');
-const url = "www.oattravel.com";
-const resultPath = `localServer/${url}`;
-const purgedFileFolder = `${resultPath}/purgedCSS`
-console.log(`Cleaning folder ${resultPath}`);
-fs.rmdirSync(resultPath, { recursive: true });
+console.log(`Cleaning folder ${rootFolder}`);
+fs.rmdirSync(rootFolder, { recursive: true });
 console.log(`Start scraping ${url}`);
+
 scrape({
     urls: [{url: `https://${url}/`, filename: 'index.html'}],
-    directory: path.resolve(__dirname, resultPath),
+    directory: path.resolve(__dirname, rootFolder),
     plugins: [ 
         new PuppeteerPlugin({
             launchOptions: { 
@@ -25,31 +27,14 @@ scrape({
         })
     ]
 }).then((result) => {
-    if(!result)
-        throw new Error("The scraping result is null or empty");
+    if(result.length == 0 || (result.length > 0 && !result[0].saved))
+        throw new Error("Someting went wrong, the website couldn't be saved.");
     
-    fs.mkdirSync(purgedFileFolder);
-    console.log(`Ununsed css extraction started`);
-    const purgeCSSResult = new PurgeCSS().purge({
-        content: ['**/*.html'],
-        css: ['**/*.css']
-    });
-
-    purgeCSSResult.then((purgedCssFiles) => {
-        console.log(`Purged css files`);
-        
-        purgedCssFiles.forEach(item => { 
-            const fileName = path.basename(item.file); 
-            const purgedFilePath = `${purgedFileFolder}/${fileName}`;    
-            fs.writeFile(purgedFilePath, item.css, function (err) {
-                if (err) 
-                throw err;
-    
-                console.log(purgedFilePath);
-            });
-        });
-    })
-
+    const gulpTasks =  configureTasks(rootFolder, resultFolder)
+    gulpTasks.forEach(taskName => {
+        console.log(`Running gulp task ${taskName}`);
+        gulp.task(taskName)();
+    });   
 }).catch((error) => {
     console.log(error);
 });
