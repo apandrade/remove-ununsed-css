@@ -9,5 +9,13 @@
             "url": "https://www.oattravel.com", 
             "filename": "index.html"
         }
+    ],
+    "keepUrls" : [
+        "https://fonts.gstatic.com/s/opensans/v26/memvYaGs126MiZpBA-UvWbX2vVnXBbObj2OVTS-muw.woff2",
+        "https://d1azc1qln24ryf.cloudfront.net/177463/OATIcons/icomoon.woff2?l8roc9",
+        "/Content/webfonts/icomoon-custom-set-oattravel.ttf?h21sj0",
+        "https://fonts.gstatic.com/s/opensans/v26/memtYaGs126MiZpBA-UFUIcVXSCEkx2cmqvXlWqWuU6F.woff2",
+        "https://fonts.gstatic.com/s/merriweather/v25/u-4m0qyriQwlOrhSvowK_l5-eRZOf-I.woff2",
+        "https://fonts.gstatic.com/s/ebgaramond/v15/SlGDmQSNjdsmc35JDF1K5E55YMjF_7DPuGi-6_RkBI9_.woff2"
     ]
 }

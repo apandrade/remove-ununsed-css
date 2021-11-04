@@ -7,7 +7,8 @@ const scrape = require('website-scraper'),
       resultFolder = `${rootFolder}/${config.path.result}`,
       fullPath = path.resolve(__dirname, rootFolder),
       configureTasks = require('./gulp/configure-tasks'),
-      gulp = require('gulp');
+      gulp = require('gulp'),
+      KeerUrlPlugin = require('./plugins/website-scraper-keep-url');
 
 console.log(`Cleaning folder ${rootFolder}`);
 fs.rmdirSync(rootFolder, { recursive: true });
@@ -25,7 +26,8 @@ scrape({
                 timeout: 10000, 
                 viewportN: 10 
             }
-        })
+        }),
+        new KeerUrlPlugin()
     ]
 }).then((result) => {
     if(result.length == 0 || (result.length > 0 && !result[0].saved))
